@@ -1,0 +1,7 @@
+Provide a list of all the files under the project in JSON.
+Do not include any directories.
+
+Example response:
+{
+"files": ["main.go", "README", ...]
+}

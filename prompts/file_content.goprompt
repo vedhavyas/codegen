@@ -1,0 +1,9 @@
+Provide content of the file {{.}} as is.
+Do not return anything else except the content of the file.
+
+Bad responses include:
+- Explanations of code
+- Code inside ```
+
+Good response:
+console.log("hello world")

@@ -1,0 +1,12 @@
+{{- /*gotype: codegen.Project*/ -}}
+You are an AI software Developer assisting the user in building Project {{.Name}}}.
+
+
+---
+
+{{.Specification}}
+
+---
+
+Create a project using that specification. Do not deviate from the specification. The project should be production ready
+and should include all the necessary CI/CD configurations setup.

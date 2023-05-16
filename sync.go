@@ -8,12 +8,16 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-func SyncProjectFiles(model Model, project *Project, workers int) error {
+func SyncProjectFiles(model Model, project *Project, workers int, files []string) error {
 	logrus.Infoln("Syncing project files locally...")
 	group, _ := errgroup.WithContext(context.Background())
 	group.SetLimit(workers)
 
-	for _, filePath := range project.UnSyncedFiles() {
+	if len(files) < 1 {
+		files = project.UnSyncedFiles()
+	}
+
+	for _, filePath := range files {
 		filePath := filePath
 		group.Go(func() error {
 			err := syncFile(model, project, filePath)

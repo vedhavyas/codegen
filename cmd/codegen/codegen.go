@@ -61,6 +61,7 @@ func main() {
 						Name:  "retries",
 						Value: 5,
 					},
+					&cli.StringSliceFlag{Name: "file"},
 				},
 				Action: func(context *cli.Context) error {
 					apiKey := os.Getenv("OPEN_AI_API_KEY")
@@ -71,7 +72,7 @@ func main() {
 					}
 					defer codegen.SaveProject(project)
 
-					return codegen.SyncProjectFiles(model, project, context.Int("workers"))
+					return codegen.SyncProjectFiles(model, project, context.Int("workers"), context.StringSlice("file"))
 				},
 			},
 		},

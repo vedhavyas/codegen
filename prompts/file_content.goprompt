@@ -1,4 +1,7 @@
 Provide content of the file {{.}} as is.
+Adhere to strict language specific guidelines.
+Ensure the file contents are valid in context of the project.
+
 Do not return anything else except the content of the file.
 
 Bad responses include:

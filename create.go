@@ -15,6 +15,7 @@ import (
 type Project struct {
 	Name          string `toml:"name"`
 	Specification string `toml:"specification"`
+	Metadata      string `toml: "metadata"`
 	mu            sync.RWMutex
 	files         map[string]bool `toml:"files"`
 }

@@ -19,5 +19,7 @@ Based on the project specification, we have agreed to following project structur
 ---
 
 Create the project using that specification and project structure.
-Do not deviate from the specification. The project should be production ready and should include all the necessary CI/CD configurations setup.
+Do not deviate from the specification.
+Ensure readme is upto date and all the commands in it works.
+The project should be production ready and should include all the necessary CI/CD configurations setup.
 

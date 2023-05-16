@@ -7,7 +7,6 @@ import (
 	"fmt"
 	openai "github.com/sashabaranov/go-openai"
 	"github.com/sirupsen/logrus"
-	"strings"
 	"time"
 )
 
@@ -49,16 +48,12 @@ func (m Model) respondWithRetry(request openai.ChatCompletionRequest) (resp open
 			return resp, nil
 		}
 
-		if strings.Contains(err.Error(), "status code: 429") {
-			logrus.Infoln("Sleeping for a bit")
-			time.Sleep(1 * time.Second)
-			continue
-		}
-
-		return resp, err
+		logrus.Infoln("Sleeping for a bit")
+		time.Sleep(1 * time.Second)
+		continue
 	}
 
-	return resp, fmt.Errorf("too many requests")
+	return resp, fmt.Errorf("failed to get response")
 }
 
 func (m Model) Respond(request openai.ChatCompletionRequest) (string, error) {

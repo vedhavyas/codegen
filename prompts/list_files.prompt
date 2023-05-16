@@ -2,7 +2,17 @@ Provide a list of all the files under the project in JSON.
 Do not include any directories.
 Do not include any files that needs to be generated locally.
 
+In order to recreate the content of each file deterministically and parallely by another AI program, generate metadata for each file.
+Metadata for each file should include but not limited to
+- filenames, package names, variable names, function names it defines.
+- references to filenames, package names, variable names, function names and other details this file uses but are defined in other files.
+
+Using specification, file structure, metadata for each file another AI programs should recreate the content of any file in the project with high fidelity.
+
 Example response:
 {
     "files": ["main.go", "README", ...]
+    "metadata": {
+        "file": ..
+    }
 }

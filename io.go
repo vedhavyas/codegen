@@ -24,15 +24,14 @@ func writeToFile(file *File) error {
 }
 
 type wp struct {
-	Name          string          `toml:"name"`
-	Specification string          `toml:"specification"`
-	Files         map[string]bool `toml:"files"`
+	*Project
+	Files map[string]bool `toml:"files"`
 }
 
 func SaveProject(project *Project) error {
 	var buf bytes.Buffer
 	enc := toml.NewEncoder(&buf)
-	err := enc.Encode(wp{Name: project.Name, Specification: project.Specification, Files: project.files})
+	err := enc.Encode(wp{Project: project, Files: project.files})
 	if err != nil {
 		return fmt.Errorf("failed to encode project: %v", err)
 	}
@@ -50,9 +49,8 @@ func LoadProject() (*Project, error) {
 		return nil, fmt.Errorf("failed to decode project")
 	}
 
-	return &Project{
-		Name:          project.Name,
-		Specification: project.Specification,
-		files:         project.Files,
-	}, nil
+	files := project.Files
+	p := project.Project
+	p.files = files
+	return p, nil
 }

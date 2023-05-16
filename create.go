@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"embed"
 	_ "embed"
+	"encoding/json"
 	"fmt"
 	"github.com/sashabaranov/go-openai"
 	"github.com/sirupsen/logrus"
@@ -13,9 +14,9 @@ import (
 )
 
 type Project struct {
-	Name          string `toml:"name"`
-	Specification string `toml:"specification"`
-	Metadata      string `toml: "metadata"`
+	Name          string                 `toml:"name"`
+	Specification string                 `toml:"specification"`
+	Metadata      map[string]interface{} `toml:"metadata"`
 	mu            sync.RWMutex
 	files         map[string]bool `toml:"files"`
 }
@@ -29,6 +30,10 @@ func (p *Project) Files() []string {
 	}
 
 	return list
+}
+
+func (p *Project) MetadataJSON(fileName string) ([]byte, error) {
+	return json.Marshal(p.Metadata[fileName])
 }
 
 func (p *Project) UnSyncedFiles() []string {
@@ -110,25 +115,24 @@ func CreateProject(model Model, name string, specificationFile string) (*Project
 		Specification: string(specification),
 	}
 
-	filesPaths, err := getProjectFiles(model, project)
+	err = loadProjectFiles(model, project)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate project file list: %v", err)
 	}
 
-	project.files = filesPaths
 	logrus.Infof("Done.")
 	return project, nil
 }
 
-func getProjectFiles(model Model, project *Project) (map[string]bool, error) {
+func loadProjectFiles(model Model, project *Project) error {
 	system, err := executeTemplate("create_project_structure_system.goprompt", project)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	user, err := executeTemplate("list_files.prompt", nil)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	request := openai.ChatCompletionRequest{
@@ -143,21 +147,25 @@ func getProjectFiles(model Model, project *Project) (map[string]bool, error) {
 				Content: user,
 			},
 		},
-		Temperature: 0.3,
+		Temperature: 0,
 	}
 
 	var response struct {
-		Files []string `json:"files"`
+		Metadata map[string]interface{} `json:"metadata"`
+		Files    []string               `json:"files"`
 	}
 
 	err = model.RespondJSON(request, &response)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	files := make(map[string]bool)
 	for _, file := range response.Files {
 		files[file] = false
 	}
-	return files, nil
+
+	project.files = files
+	project.Metadata = response.Metadata
+	return nil
 }

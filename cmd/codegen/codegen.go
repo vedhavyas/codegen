@@ -54,10 +54,6 @@ func main() {
 						Value: "gpt-4",
 					},
 					&cli.IntFlag{
-						Name:  "workers",
-						Value: 10,
-					},
-					&cli.IntFlag{
 						Name:  "retries",
 						Value: 5,
 					},
@@ -72,7 +68,7 @@ func main() {
 					}
 					defer codegen.SaveProject(project)
 
-					return codegen.SyncProjectFiles(model, project, context.Int("workers"), context.StringSlice("file"))
+					return codegen.SyncProjectFiles(model, project, context.StringSlice("file"))
 				},
 			},
 		},

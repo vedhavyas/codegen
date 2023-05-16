@@ -8,15 +8,14 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-func SyncProjectFiles(model Model, project *Project, workers int, files []string) error {
+func SyncProjectFiles(model Model, project *Project, files []string) error {
 	logrus.Infoln("Syncing project files locally...")
 	group, _ := errgroup.WithContext(context.Background())
-	group.SetLimit(workers)
 
 	if len(files) < 1 {
 		files = project.UnSyncedFiles()
 	}
-
+	group.SetLimit(len(files))
 	for _, filePath := range files {
 		filePath := filePath
 		group.Go(func() error {
@@ -52,13 +51,26 @@ func syncFile(model Model, project *Project, filePath string) error {
 	return nil
 }
 
+type GetFileContent struct {
+	FilePath string
+	Metadata string
+}
+
 func getFileContent(model Model, project *Project, filePath string) (*File, error) {
 	system, err := executeTemplate("existing_project_system.goprompt", project)
 	if err != nil {
 		return nil, err
 	}
 
-	user, err := executeTemplate("file_content.goprompt", filePath)
+	metadata, err := project.MetadataJSON(filePath)
+	if err != nil {
+		return nil, err
+	}
+
+	user, err := executeTemplate("file_content.goprompt", GetFileContent{
+		FilePath: filePath,
+		Metadata: string(metadata),
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +87,7 @@ func getFileContent(model Model, project *Project, filePath string) (*File, erro
 				Content: user,
 			},
 		},
-		Temperature: 0.3,
+		Temperature: 0,
 	}
 
 	content, err := model.Respond(request)

@@ -8,6 +8,24 @@ Specifications:
 6. Include unit tests for components and logic
 7. Use modern CSS components for cleaner UI
 
-Notes:
+Project structure:
+- backend
+- frontend
+- infra
+- ...
+
+Backend:
 - Use go 1.19
 - Use `github.com/vedhavyas/todo` as the go module name
+- Keep all the components under `backend` folder without any inner packages.
+- Use gorilla mux with standard http router. Do not use Gin or similar frameworks.
+- Use Sqlite to store data.
+
+CI/CD:
+- Use github actions
+- Use docker compose with production and dev variants
+
+Note:
+- Implement all the necessary components.
+- The app should be production ready.
+- Do not give any unimplemented or mocked logic.

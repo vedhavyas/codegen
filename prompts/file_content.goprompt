@@ -1,12 +1,29 @@
-Provide content of the file {{.}} as is.
+Provide content of the file {{.FilePath}} as is.
 Adhere to strict language specific guidelines.
 Ensure the file contents are valid in context of the project.
-
 Do not return anything else except the content of the file.
+And REMEMBER to not leave any TODOs or leftovers for the User. You should only return fully valid file content.
+
+In order to recreate the content of each file deterministically and parallely by another AI program, we generate metadata for each file.
+Metadata for each file includes but not limited to
+- filenames, package names, variable names, function names it defines.
+- references to filenames, package names, variable names, function names and other details this file uses but are defined in other files.
+
+Using this specification, project structure and metadata create content of the file in the project with high fidelity.
+Metadata of the file in JSON format is as follows.
+
+---
+
+{{.Metadata}}}
+
+---
 
 Bad responses include:
 - Explanations of code
-- Code inside ```
+- ```
+- ```go
 
-Good response:
+Good response will mimic the behavior of linux `cat` command's output.
+
+Example good response for `hello.js`:
 console.log("hello world")

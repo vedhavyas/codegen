@@ -19,14 +19,17 @@ func main() {
 					&cli.StringFlag{
 						Name:     "name",
 						Required: true,
+						Usage:    "Name of the project.",
 					},
 					&cli.StringFlag{
 						Name:  "specification",
 						Value: "specification.md",
+						Usage: "Project specification file.",
 					},
 					&cli.StringFlag{
 						Name:  "model",
 						Value: "gpt-4",
+						Usage: "GPT model to use",
 					},
 					&cli.IntFlag{
 						Name:  "retries",
@@ -35,6 +38,7 @@ func main() {
 					&cli.BoolFlag{
 						Name:  "sync",
 						Value: true,
+						Usage: "Create files locally.",
 					},
 					&cli.StringSliceFlag{Name: "file"},
 				},

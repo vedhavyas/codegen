@@ -2,6 +2,8 @@
 
 The Codegen is a command-line interface that helps you create a new project based on the provided specification using the power of the AI. It allows you to choose the model, provide a project name, and sync files locally.
 
+Note: The CLI will only get you started with the project with most of the work already done. As a developer, you still need to fix the mistakes in the Code. The more specific specification is, the better the results are.
+
 ## Usage
 
 Firstly, install the necessary dependencies and build the binary:

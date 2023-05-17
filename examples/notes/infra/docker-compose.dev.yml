@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  frontend:
+    image: svelte-tauri-note-app-frontend:dev
+    build:
+      context: ../
+      dockerfile: ./Dockerfile.frontend
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../frontend:/frontend
+    environment:
+      - NODE_ENV=development
+  backend:
+    image: svelte-tauri-note-app-backend:dev
+    build:
+      context: ../
+      dockerfile: ./Dockerfile.backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../backend:/backend
+    environment:
+      - RUST_ENV=development
+
+volumes:
+  frontend:
+  backend:

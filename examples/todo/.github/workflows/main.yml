@@ -1,0 +1,30 @@
+name: CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      backend:
+        build:
+          context: backend
+          dockerfile: backend/Dockerfile
+      frontend:
+        build:
+          context: frontend
+          dockerfile: frontend/Dockerfile
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Linting, testing and building
+      run: ./ci/cd.sh

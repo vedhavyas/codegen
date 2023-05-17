@@ -1,0 +1,155 @@
+name = "todo"
+specification = "A simple Todo List application that allows users to add, edit, mark as complete, and delete tasks. The application is developed using a Svelete as frontend and Go as backend to store the state.\nSpecifications:\n1. Tasks should be displayed in a list view\n2. Option to add a new task\n3. Option to edit a task\n4. Option to mark tasks as complete/incomplete\n5. Option to delete tasks\n6. Include unit tests for components and logic\n7. Use modern CSS components for cleaner UI\n\nProject structure:\n- backend\n- frontend\n- infra\n- ...\n\nBackend:\n- Use go 1.19\n- Use `github.com/vedhavyas/todo` as the go module name\n- Keep all the components under `backend` folder without any inner packages.\n- Use gorilla mux with standard http router. Do not use Gin or similar frameworks.\n- Use Sqlite to store data.\n\nCI/CD:\n- Use github actions\n- Use docker compose with production and dev variants\n\nNote:\n- Implement all the necessary components.\n- The app should be production ready.\n- Do not give any unimplemented or mocked logic."
+
+[metadata]
+  [metadata.".github/workflows/main.yml"]
+    name = "CI/CD Workflow"
+    [metadata.".github/workflows/main.yml".jobs]
+      [metadata.".github/workflows/main.yml".jobs.build]
+        osMatrix = ["ubuntu-latest"]
+        [metadata.".github/workflows/main.yml".jobs.build.services]
+          backend = "Dockerfile"
+          frontend = "Dockerfile"
+
+        [[metadata.".github/workflows/main.yml".jobs.build.steps]]
+          name = "Linting,testing and building"
+          run = "./ci/cd.sh"
+    [metadata.".github/workflows/main.yml".references]
+      [metadata.".github/workflows/main.yml".references.backend]
+        Dockerfile = "backend/Dockerfile"
+      [metadata.".github/workflows/main.yml".references.frontend]
+        Dockerfile = "frontend/Dockerfile"
+  [metadata."README.md"]
+    sections = ["Description", "Installing", "Usage", "Tests", "Deploying", "Contributing"]
+  [metadata."backend/Dockerfile"]
+    baseImage = "golang:1.19"
+    commands = ["COPY", "RUN", "CMD", "EXPOSE", "WORKDIR"]
+  [metadata."backend/db.go"]
+    functions = ["GetAllTasks", "AddTask", "ModifyTask", "RemoveTask", "SetTaskCompletion"]
+    imports = ["database/sql", "github.com/mattn/go-sqlite3"]
+    package = "main"
+    structs = ["TaskNotFoundError"]
+    [metadata."backend/db.go".references]
+      [metadata."backend/db.go".references."database/sql"]
+        functions = ["Open", "Close", "Query", "Exec"]
+        types = ["DB"]
+      [metadata."backend/db.go".references."github.com/mattn/go-sqlite3"]
+        types = ["SQLiteDriver"]
+  [metadata."backend/main.go"]
+    functions = ["main"]
+    imports = ["fmt", "net/http", "github.com/gorilla/mux"]
+    package = "main"
+    [metadata."backend/main.go".references]
+      [metadata."backend/main.go".references.fmt]
+        functions = ["Println"]
+      [metadata."backend/main.go".references."github.com/gorilla/mux"]
+        functions = ["NewRouter"]
+        variables = ["Router"]
+      [metadata."backend/main.go".references."net/http"]
+        functions = ["ListenAndServe"]
+      [metadata."backend/main.go".references."router.go"]
+        functions = ["InitRouter"]
+        package = "main"
+  [metadata."backend/router.go"]
+    functions = ["InitRouter"]
+    imports = ["net/http", "github.com/gorilla/mux"]
+    package = "main"
+    [metadata."backend/router.go".references]
+      [metadata."backend/router.go".references."github.com/gorilla/mux"]
+        functions = ["NewRouter"]
+        variables = ["Router"]
+      [metadata."backend/router.go".references."net/http"]
+        types = ["HandlerFunc"]
+      [metadata."backend/router.go".references."task.go"]
+        functions = ["GetTasks", "CreateTask", "UpdateTask", "DeleteTask", "ToggleTaskComplete"]
+        package = "main"
+  [metadata."backend/task.go"]
+    functions = ["GetTasks", "CreateTask", "UpdateTask", "DeleteTask", "ToggleTaskComplete"]
+    imports = ["encoding/json", "net/http", "strconv"]
+    package = "main"
+    structs = ["Task"]
+    [metadata."backend/task.go".references]
+      [metadata."backend/task.go".references."db.go"]
+        functions = ["GetAllTasks", "AddTask", "ModifyTask", "RemoveTask", "SetTaskCompletion"]
+        package = "main"
+        variables = ["TaskNotFoundError"]
+      [metadata."backend/task.go".references."encoding/json"]
+        functions = ["NewEncoder"]
+      [metadata."backend/task.go".references."net/http"]
+        types = ["ResponseWriter", "Request"]
+        variables = ["StatusOK", "StatusBadRequest", "StatusNotFound", "StatusInternalServerError"]
+      [metadata."backend/task.go".references.strconv]
+        functions = ["Atoi"]
+  [metadata."backend/task_test.go"]
+    functions = ["TestGetTasks", "TestCreateTask", "TestUpdateTask", "TestDeleteTask", "TestToggleTaskComplete"]
+    imports = ["testing", "net/http", "net/http/httptest", "github.com/stretchr/testify/assert"]
+    package = "main_test"
+    [metadata."backend/task_test.go".references]
+      [metadata."backend/task_test.go".references."github.com/stretchr/testify/assert"]
+        functions = ["Equal", "JSONEq", "NotEqual", "True", "False", "Contains", "Empty"]
+      [metadata."backend/task_test.go".references."net/http"]
+        types = ["ResponseWriter", "Request"]
+        variables = ["StatusOK", "StatusBadRequest", "StatusNotFound", "StatusInternalServerError"]
+      [metadata."backend/task_test.go".references."net/http/httptest"]
+        functions = ["NewRequest", "NewRecorder"]
+      [metadata."backend/task_test.go".references."task.go"]
+        functions = ["GetTasks", "CreateTask", "UpdateTask", "DeleteTask", "ToggleTaskComplete"]
+        package = "main"
+      [metadata."backend/task_test.go".references.testing]
+        functions = ["T"]
+  [metadata."frontend/Dockerfile"]
+    baseImage = "node:14"
+    commands = ["COPY", "RUN", "CMD", "EXPOSE", "WORKDIR"]
+  [metadata."frontend/public/index.html"]
+    components = ["App"]
+    [metadata."frontend/public/index.html".references]
+      [metadata."frontend/public/index.html".references."frontend/src/App.svelte"]
+        components = ["App"]
+  [metadata."frontend/src/App.svelte"]
+    components = ["NewTask", "Task"]
+    htmlTags = ["button", "input", "section", "ul", "li", "h1", "div"]
+    imports = ["./NewTask.svelte", "./Task.svelte"]
+    [metadata."frontend/src/App.svelte".references]
+      [metadata."frontend/src/App.svelte".references."./NewTask.svelte"]
+        components = ["NewTask"]
+      [metadata."frontend/src/App.svelte".references."./Task.svelte"]
+        components = ["Task"]
+  [metadata."frontend/src/NewTask.svelte"]
+    components = []
+    htmlTags = ["button", "input", "div"]
+    [metadata."frontend/src/NewTask.svelte".references]
+  [metadata."frontend/src/Task.svelte"]
+    components = []
+    htmlTags = ["input", "button", "label", "div"]
+    [metadata."frontend/src/Task.svelte".references]
+  [metadata."infra/docker-compose.dev.yml"]
+    services = ["backend", "frontend"]
+    [metadata."infra/docker-compose.dev.yml".references]
+      [metadata."infra/docker-compose.dev.yml".references."backend/Dockerfile"]
+        container = "backend"
+      [metadata."infra/docker-compose.dev.yml".references."frontend/Dockerfile"]
+        container = "frontend"
+  [metadata."infra/docker-compose.prod.yml"]
+    services = ["backend", "frontend"]
+    [metadata."infra/docker-compose.prod.yml".references]
+      [metadata."infra/docker-compose.prod.yml".references."backend/Dockerfile"]
+        container = "backend"
+      [metadata."infra/docker-compose.prod.yml".references."frontend/Dockerfile"]
+        container = "frontend"
+
+[files]
+  ".github/workflows/main.yml" = true
+  "README.md" = true
+  "backend/Dockerfile" = true
+  "backend/db.go" = true
+  "backend/main.go" = true
+  "backend/router.go" = true
+  "backend/task.go" = true
+  "backend/task_test.go" = true
+  "frontend/Dockerfile" = true
+  "frontend/public/index.html" = true
+  "frontend/src/App.svelte" = true
+  "frontend/src/NewTask.svelte" = true
+  "frontend/src/Task.svelte" = true
+  "infra/docker-compose.dev.yml" = true
+  "infra/docker-compose.prod.yml" = true

@@ -1,0 +1,47 @@
+name = "sort"
+specification = "Write Go module that implements merge sort.  \n\nRequirements:\n- Use Go 1.19\n- Use `github.com/vedhavyas/sort` as the module name\n- Add tests and usages."
+
+[metadata]
+  [metadata."README.md"]
+    description = "A Go module that implements the merge sort algorithm."
+    project_name = "Go MergeSort Module"
+    [metadata."README.md".usage]
+      prerequisites = ["Go 1.19"]
+      [metadata."README.md".usage.examples]
+        sort_example = ["main.go"]
+        test_examples = ["mergesort_test.go"]
+      [metadata."README.md".usage.installation]
+        import_statement = "import \"github.com/vedhavyas/sort\""
+        module_name = "github.com/vedhavyas/sort"
+  [metadata."main.go"]
+    functions = ["main"]
+    imports = ["fmt", "github.com/vedhavyas/sort"]
+    package_name = "main"
+    variables = []
+    [metadata."main.go".external_dependency]
+      filename = "mergesort.go"
+      function = "MergeSort"
+      package = "github.com/vedhavyas/sort"
+  [metadata."mergesort.go"]
+    functions = ["MergeSort", "merge"]
+    imports = []
+    package_name = "sort"
+    variables = []
+  [metadata."mergesort_test.go"]
+    functions = ["TestMergeSort"]
+    imports = ["testing", "github.com/stretchr/testify/assert", "github.com/vedhavyas/sort"]
+    package_name = "sort_test"
+    variables = []
+    [metadata."mergesort_test.go".external_dependency]
+      filename = "mergesort.go"
+      function = "MergeSort"
+      package = "github.com/vedhavyas/sort"
+    [metadata."mergesort_test.go".test_dependency]
+      functions = ["Equal"]
+      package = "github.com/stretchr/testify/assert"
+
+[files]
+  "README.md" = true
+  "main.go" = true
+  "mergesort.go" = true
+  "mergesort_test.go" = true

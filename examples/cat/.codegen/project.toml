@@ -1,0 +1,52 @@
+name = "cat"
+specification = "A command line application called `cat`. This is a drop in replacement for Linux `cat` command.\nSpecifications:\n- A Cli app as a drop in replacement for Linux `cat` command\n- As a library for other applications. \n\nNotes:\n- Use Python 3 as the language of choice\n- Add extensive documentation.\n- Add Cli usage examples.\n- Add Library usage examples.\n"
+
+[metadata]
+  [metadata.".gitignore"]
+  [metadata.LICENSE]
+  [metadata."README.md"]
+    variables = ["long_description"]
+  [metadata."cat_lib.py"]
+    functions = ["cat_files"]
+    imports = ["os"]
+    variables = ["output", "file"]
+  [metadata."examples/cli_example.py"]
+    imports = ["os", "sys"]
+
+    [[metadata."examples/cli_example.py".external_references]]
+      filename = "main.py"
+      functions = ["main"]
+  [metadata."examples/library_example.py"]
+    imports = ["cat_lib"]
+    variables = ["filepaths", "output"]
+
+    [[metadata."examples/library_example.py".external_references]]
+      filename = "cat_lib.py"
+      functions = ["cat_files"]
+  [metadata."main.py"]
+    functions = ["main"]
+    imports = ["argparse", "cat_lib"]
+    variables = ["parser", "args", "result"]
+
+    [[metadata."main.py".external_references]]
+      filename = "cat_lib.py"
+      functions = ["cat_files"]
+  [metadata."requirements.txt"]
+  [metadata."setup.py"]
+    imports = ["setuptools"]
+    variables = ["requirements"]
+
+    [[metadata."setup.py".external_references]]
+      filename = "README.md"
+      variables = ["long_description"]
+
+[files]
+  ".gitignore" = true
+  LICENSE = true
+  "README.md" = true
+  "cat_lib.py" = true
+  "examples/cli_example.py" = true
+  "examples/library_example.py" = true
+  "main.py" = true
+  "requirements.txt" = true
+  "setup.py" = true

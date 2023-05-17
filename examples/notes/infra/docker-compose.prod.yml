@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  backend:
+    image: notes-backend:latest
+    build:
+      context: ../backend
+      dockerfile: Dockerfile.prod
+    restart: always
+    environment:
+      - RUST_LOG=info
+    ports:
+      - "8080:8080"
+    networks:
+      - notes-network
+
+  frontend:
+    image: notes-frontend:latest
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile.prod
+    restart: always
+    ports:
+      - "80:80"
+    networks:
+      - notes-network
+
+networks:
+  notes-network:
+    driver: bridge

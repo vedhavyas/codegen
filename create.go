@@ -32,8 +32,12 @@ func (p *Project) Files() []string {
 	return list
 }
 
-func (p *Project) MetadataJSON(fileName string) ([]byte, error) {
+func (p *Project) MetadataJSONOFile(fileName string) ([]byte, error) {
 	return json.Marshal(p.Metadata[fileName])
+}
+
+func (p *Project) MetadataJSON() ([]byte, error) {
+	return json.Marshal(p.Metadata)
 }
 
 func (p *Project) UnSyncedFiles() []string {

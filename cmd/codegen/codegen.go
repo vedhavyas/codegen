@@ -2,7 +2,6 @@ package main
 
 import (
 	"codegen"
-	"fmt"
 	"github.com/urfave/cli/v2"
 	"log"
 	"os"
@@ -33,6 +32,11 @@ func main() {
 						Name:  "retries",
 						Value: 5,
 					},
+					&cli.BoolFlag{
+						Name:  "sync",
+						Value: true,
+					},
+					&cli.StringSliceFlag{Name: "file"},
 				},
 				Action: func(context *cli.Context) error {
 					apiKey := os.Getenv("OPEN_AI_API_KEY")
@@ -41,32 +45,11 @@ func main() {
 					if err != nil {
 						return err
 					}
-
-					return codegen.SaveProject(project)
-				},
-			},
-			{
-				Name:  "sync",
-				Usage: "Sync a project files created based on the Specification provided",
-				Flags: []cli.Flag{
-					&cli.StringFlag{
-						Name:  "model",
-						Value: "gpt-4",
-					},
-					&cli.IntFlag{
-						Name:  "retries",
-						Value: 5,
-					},
-					&cli.StringSliceFlag{Name: "file"},
-				},
-				Action: func(context *cli.Context) error {
-					apiKey := os.Getenv("OPEN_AI_API_KEY")
-					model := codegen.NewModel(context.String("model"), context.Int("retries"), apiKey)
-					project, err := codegen.LoadProject()
-					if err != nil {
-						return fmt.Errorf("failed to load project. please run `create` first")
-					}
 					defer codegen.SaveProject(project)
+
+					if !context.Bool("sync") {
+						return nil
+					}
 
 					return codegen.SyncProjectFiles(model, project, context.StringSlice("file"))
 				},

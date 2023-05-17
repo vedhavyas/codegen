@@ -1,0 +1,73 @@
+name = "notes"
+specification = "A simple note taking app that allows users to add, edit, delete notes. The web application is built using Svelte and Tauri with rust.\nSpecifications:\n1. Notes should be displayed in a list view\n2. Option to add a new note.\n3. Option to edit a existing note.\n4. Option to delete an existing note.\n5. Include unit tests.\n6. Use modern CSS components.\n\nProject structure:\n- backend\n- frontend\n- infra\n- ...\n\nBackend:\n- Use Rust nightly\n- Use Sqlite to store data.\n\nCI/CD:\n- Use github actions\n- Use docker compose with production and dev variants\n\nNote:\n- Implement all the necessary components.\n- The app should be production ready.\n- Do not give any unimplemented or mocked logic."
+
+[metadata]
+  [metadata.".github/workflows/ci-cd.yml"]
+    defines = ["build", "test", "deploy"]
+    references = ["checkout", "cache", "actions-rs/toolchain", "actions-rs/cargo", "setup-node", "docker", "docker/build-push-action"]
+  [metadata."README.md"]
+    defines = [""]
+    references = [""]
+  [metadata."backend/src/db.rs"]
+    defines = ["run_db", "create_note", "update_note", "delete_note", "list_notes"]
+    references = ["rusqlite::Connection", "rusqlite::Result", "rusqlite::params", "models::Note"]
+  [metadata."backend/src/main.rs"]
+    defines = ["main"]
+    references = ["db::run_db", "models::Note"]
+  [metadata."backend/src/models.rs"]
+    defines = ["Note"]
+    references = ["serde_derive::Serialize", "serde_derive::Deserialize"]
+  [metadata."backend/tests/test_mod.rs"]
+    defines = ["test_create_note", "test_update_note", "test_delete_note", "test_list_notes"]
+    references = ["crate::db", "crate::models"]
+  [metadata."frontend/src/App.svelte"]
+    defines = [""]
+    references = ["NotesList", "AddNote", "noteAPI"]
+  [metadata."frontend/src/Note.svelte"]
+    defines = [""]
+    references = ["EditNote", "DeleteNote"]
+  [metadata."frontend/src/components/AddNote.svelte"]
+    defines = [""]
+    references = ["notesAPI"]
+  [metadata."frontend/src/components/DeleteNote.svelte"]
+    defines = [""]
+    references = ["notesAPI"]
+  [metadata."frontend/src/components/EditNote.svelte"]
+    defines = [""]
+    references = ["notesAPI"]
+  [metadata."frontend/src/components/NotesList.svelte"]
+    defines = [""]
+    references = [""]
+  [metadata."frontend/src/components/noteAPI.js"]
+    defines = ["getNotes", "addNote", "updateNote", "deleteNote"]
+    references = ["axios"]
+  [metadata."frontend/tests/__tests__/App.spec.js"]
+    defines = [""]
+    references = ["@testing-library/svelte", "App", "noteAPI"]
+  [metadata."infra/docker-compose.dev.yml"]
+    defines = [""]
+    references = [""]
+  [metadata."infra/docker-compose.prod.yml"]
+    defines = [""]
+    references = [""]
+
+[files]
+  ".github/workflows/ci-cd.yml" = true
+  "README.md" = true
+  "backend/Cargo.lock" = true
+  "backend/Cargo.toml" = true
+  "backend/src/db.rs" = true
+  "backend/src/main.rs" = true
+  "backend/src/models.rs" = true
+  "backend/tests/test_mod.rs" = true
+  "frontend/package.json" = true
+  "frontend/src/App.svelte" = true
+  "frontend/src/Note.svelte" = true
+  "frontend/src/components/AddNote.svelte" = true
+  "frontend/src/components/DeleteNote.svelte" = true
+  "frontend/src/components/EditNote.svelte" = true
+  "frontend/src/components/NotesList.svelte" = true
+  "frontend/src/components/noteAPI.js" = true
+  "frontend/tests/__tests__/App.spec.js" = true
+  "infra/docker-compose.dev.yml" = true
+  "infra/docker-compose.prod.yml" = true

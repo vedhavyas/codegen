@@ -48,7 +48,7 @@ func (m Model) respondWithRetry(request openai.ChatCompletionRequest) (resp open
 			return resp, nil
 		}
 
-		logrus.Infoln("Sleeping for a bit")
+		logrus.Debugln("Sleeping for a bit")
 		time.Sleep(1 * time.Second)
 		continue
 	}

@@ -4,19 +4,22 @@ Ensure the file contents are valid in context of the project.
 Do not return anything else except the content of the file.
 And REMEMBER to not leave any TODOs or leftovers for the User. You should only return fully valid file content.
 
-In order to recreate the content of each file deterministically and parallely by another AI program, we generate metadata for each file.
+In order to recreate the content of each file deterministically and parallely by another AI program, we generated metadata for each file in the project.
 Metadata for each file includes but not limited to
 - filenames, package names, variable names, function names it defines.
 - references to filenames, package names, variable names, function names and other details this file uses but are defined in other files.
+Use this metadata to create file contents. Do not deviate from provided metadata when defining filenames, package names, variable names, function names etc..
+Do not deviate from references to filenames, package names, variable names, function names and other details this file uses but are defined in other files.
 
-Using this specification, project structure and metadata create content of the file in the project with high fidelity.
-Metadata of the file in JSON format is as follows.
+Metadata of all files in JSON format is as follows.
 
 ---
 
 {{.Metadata}}}
 
 ---
+
+Using the specification, project structure and metadata to generate content of the file.
 
 Bad responses include:
 - Explanations of code

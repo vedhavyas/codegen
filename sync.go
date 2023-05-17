@@ -6,6 +6,7 @@ import (
 	"github.com/sashabaranov/go-openai"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
+	"regexp"
 )
 
 func SyncProjectFiles(model Model, project *Project, files []string) error {
@@ -62,7 +63,7 @@ func getFileContent(model Model, project *Project, filePath string) (*File, erro
 		return nil, err
 	}
 
-	metadata, err := project.MetadataJSON(filePath)
+	metadata, err := project.MetadataJSON()
 	if err != nil {
 		return nil, err
 	}
@@ -97,6 +98,21 @@ func getFileContent(model Model, project *Project, filePath string) (*File, erro
 
 	return &File{
 		Path:    filePath,
-		Content: []byte(content),
+		Content: []byte(removeCodeFences(content)),
 	}, nil
+}
+
+// / Here \x60 is unicode for `. Since Golang doesn't support backtick inside backticks, we are using the unicode directly
+var codeFenceRegex = regexp.MustCompile(`(?m)\x60{3}(?P<lang>.*$)\n?(?P<content>(?s:.*))\x60{3}`)
+
+// Some models seem to give Code in ``` even when explicltly not to.
+// we will guard it here and clean them
+func removeCodeFences(data string) string {
+	matches := codeFenceRegex.FindStringSubmatch(data)
+	contentIdx := codeFenceRegex.SubexpIndex("content")
+	if contentIdx == -1 || contentIdx >= len(matches) {
+		return data
+	}
+
+	return matches[contentIdx]
 }
